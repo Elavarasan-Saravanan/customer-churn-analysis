@@ -41,20 +41,17 @@ Analyze customer support interactions and their correlation with churn
 
 This query calculates the churn rate by dividing the number of churned customers by the total customer base.
 
-SELECT COUNT(customer_id) AS churned_customers,
-       COUNT(customer_id) * 100.0 / (SELECT COUNT(*) FROM customers) AS churn_rate
-FROM customers
-WHERE status = 'Churned';
+![image](https://github.com/user-attachments/assets/0f91ca75-5d1e-4f0d-a819-7c38759fa41f)
+
 
  **Insight:** Helps assess overall customer attrition and measure business performance.
 
-**2. Revenue Trends by Subscription Type**
+**2. Churn by Subscription Type**
 
-SELECT subscription_type, SUM(amount) AS total_revenue
-FROM transactions
-GROUP BY subscription_type;
+![image](https://github.com/user-attachments/assets/1cb7f5c8-f8c5-43e6-917c-0a79cadc405d)
 
- **Insight:** Identifies which subscription types generate the most revenue, guiding pricing strategies.
+
+ **Insight:** Identifies which subscription types has the most churn, guiding pricing strategies.
 
 **3. Support Ticket Impact on Churn**
 
