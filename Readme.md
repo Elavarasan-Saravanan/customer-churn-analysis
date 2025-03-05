@@ -1,5 +1,6 @@
 Customer Churn Analysis Project
 
+
  Project Overview
 
 Customer churn is a crucial metric for businesses, as it helps identify why customers leave and what can be done to retain them. This project leverages SQL for data analysis and Power BI for visualization to uncover key insights into churn patterns, helping businesses improve customer retention strategies.
@@ -76,6 +77,11 @@ ORDER BY year;
  Insight: Identifies which years had the highest churn rates and possible external factors influencing it.
 
  Power BI Dashboard
+View Interactive dashboard
+https://app.powerbi.com/view?r=eyJrIjoiOGY2NjA1YjItYjc0NC00OWM2LWFiZDQtYzZlMzRkMzJlMmRjIiwidCI6ImRmODY3OWNkLWE4MGUtNDVkOC05OWFjLWM4M2VkN2ZmOTVhMCJ9
+
+![image](https://github.com/user-attachments/assets/231b5e82-efb9-4293-b212-055057876e91)
+
 
 Customer Churn Overview
 
