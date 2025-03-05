@@ -1,105 +1,97 @@
 # Customer Churn Analysis Project
 
-**Project Overview**
+## Tools Used:
+- MySQL
+- Power BI
 
-Customer churn is a crucial metric for businesses, as it helps identify why customers leave and what can be done to retain them. This project leverages SQL for data analysis and Power BI for visualization to uncover key insights into churn patterns, helping businesses improve customer retention strategies.
+## Dataset Used:
+Customer churn dataset from [your data source]
 
-**Objectives**
+## Business Problem:
+Customer churn is a significant challenge for businesses, leading to revenue loss and increased acquisition costs. The objective of this analysis is to understand customer churn patterns, identify key factors contributing to churn, and derive actionable insights that can help businesses retain customers.
 
-Analyze churn trends over time to identify patterns
+## Approach to Solving the Problem:
+To address the business problem, I utilized MySQL for data extraction and analysis. By leveraging SQL queries, I identified trends, patterns, and key metrics such as churn rates, customer demographics, and usage behavior. Additionally, I visualized the findings in Power BI to create an interactive dashboard that enables businesses to explore churn trends and take informed actions to improve retention.
 
-Identify high-risk customer segments prone to churn
+## Questions Answered with SQL Analysis:
 
-Examine the impact of subscription types on customer retention
+### 1. What is the overall churn rate?
+```sql
+SELECT 
+    COUNT(*) AS total_customers,
+    SUM(CASE WHEN status = 'Churned' THEN 1 ELSE 0 END) AS churned_customers,
+    ROUND(SUM(CASE WHEN status = 'Churned' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS churn_rate
+FROM customers;
+```
+**Result:** ![image](https://github.com/user-attachments/assets/bce1cc70-03a8-4e18-8163-b92cff9c869f)
 
-Provide key performance indicators (KPIs) for decision-makers
+**Insight:** The overall churn rate provides an overview of customer retention challenges and helps assess the scale of churn.
 
-Analyze customer support interactions and their correlation with churn
-
-**Dataset**
-
-**Total Records:** 10,000+
-
-**Columns:** Customer ID, Signup Date, Subscription Type, Payment History, Support Tickets, Churn Status, etc.
-
-**Data Source:** Synthetic data generated for analysis
-
-**Storage:** MySQL database
-
-## Tech Stack<br>
-
-**Database:** MySQL
-
-**Query Language:** SQL
-
-**Visualization:** Power BI
-
-**Connection:** MySQL direct import to Power BI
-
-## SQL Queries & Explanations<br>
-**1. Churn Rate Calculation**
-
-This query calculates the churn rate by dividing the number of churned customers by the total customer base.
-
-![image](https://github.com/user-attachments/assets/0f91ca75-5d1e-4f0d-a819-7c38759fa41f)
-
-
- **Insight:** Helps assess overall customer attrition and measure business performance.
-
-**2. Churn by Subscription Type**
-
-![image](https://github.com/user-attachments/assets/1cb7f5c8-f8c5-43e6-917c-0a79cadc405d)
-
-
- **Insight:** Identifies which subscription types has the most churn, guiding pricing strategies.
-
-**3. Support Ticket Impact on Churn**
-
-SELECT status, COUNT(ticket_id) AS ticket_count
-FROM support_tickets
-GROUP BY status;
-
- **Insight:** Reveals how unresolved or pending tickets contribute to churn, emphasizing the importance of customer support.
-
-**4. Yearly Churn Trends**
-
-SELECT YEAR(signup_date) AS year, COUNT(customer_id) AS churned_customers
+### 2. What are the top reasons for customer churn?
+```sql
+SELECT churn_reason, COUNT(*) AS occurrences
 FROM customers
-WHERE status = 'Churned'
-GROUP BY YEAR(signup_date)
-ORDER BY year;
+WHERE churn_status = 'Yes'
+GROUP BY churn_reason
+ORDER BY occurrences DESC;
+```
+**Insight:** Identifying the top reasons for churn helps businesses target specific issues affecting customer satisfaction.
 
- **Insight:** Identifies which years had the highest churn rates and possible external factors influencing it.
+### 3. How does tenure impact churn?
+```sql
+SELECT tenure_group, COUNT(*) AS churn_count
+FROM (
+    SELECT CASE
+        WHEN tenure <= 6 THEN '0-6 months'
+        WHEN tenure <= 12 THEN '7-12 months'
+        WHEN tenure <= 24 THEN '1-2 years'
+        ELSE '2+ years' END AS tenure_group,
+        churn_status
+    FROM customers
+) AS tenure_data
+WHERE churn_status = 'Yes'
+GROUP BY tenure_group
+ORDER BY churn_count DESC;
+```
+**Insight:** Understanding how long customers stay before churning can help develop targeted retention strategies.
 
-## Power BI Dashboard<br>
-View Interactive dashboard
-https://app.powerbi.com/view?r=eyJrIjoiOGY2NjA1YjItYjc0NC00OWM2LWFiZDQtYzZlMzRkMzJlMmRjIiwidCI6ImRmODY3OWNkLWE4MGUtNDVkOC05OWFjLWM4M2VkN2ZmOTVhMCJ9
+### 4. Which customer segments have the highest churn rates?
+```sql
+SELECT customer_segment,
+       (COUNT(*) / (SELECT COUNT(*) FROM customers WHERE customer_segment = c.customer_segment)) * 100 AS churn_rate
+FROM customers c
+WHERE churn_status = 'Yes'
+GROUP BY customer_segment
+ORDER BY churn_rate DESC;
+```
+**Insight:** Segmentation analysis highlights which groups of customers are more likely to churn.
 
-![image](https://github.com/user-attachments/assets/231b5e82-efb9-4293-b212-055057876e91)
+### 5. What subscription types are most prone to churn?
+```sql
+SELECT subscription_type, COUNT(*) AS churn_count
+FROM customers
+WHERE churn_status = 'Yes'
+GROUP BY subscription_type
+ORDER BY churn_count DESC;
+```
+**Insight:** Subscription-based businesses can use this data to improve offerings and enhance customer retention.
 
+## Power BI Dashboard:
+The findings from the SQL analysis are visualized using Power BI, allowing for:
+- Interactive exploration of churn trends
+- Dynamic filtering by customer demographics and subscription types
+- Identification of key churn drivers and risk factors
 
-**Customer Churn Overview**<br>
+(Screenshots to be added here)
 
-**Key Metrics:** Churn Rate, Average Revenue Per User (ARPU)
+## Conclusion:
+By analyzing customer churn data, this project provides valuable insights into customer behavior and key factors influencing churn. The findings can be used to implement data-driven retention strategies, improve customer satisfaction, and enhance business profitability.
 
-**Visuals:** Churn Status Pie Chart, Yearly Churn Trends, Subscription Revenue Analysis
+## Next Steps:
+- Implement machine learning models to predict customer churn
+- Develop personalized retention campaigns based on insights
+- Continuously update the dashboard with real-time data
 
-**Insights:** Identify churn hotspots & revenue distribution
-
-
-**Customer Support & Trends**<br>
-
-**Key Metrics:** Total Revenue, Late Payments, Customer Growth
-
-**Visuals:** Monthly Revenue Trends, Late Payment Summary, Support Ticket Status
-
-**Insights:** Correlation between support issues, late payments, and churn
-
-
-**Business Impact & Key Insights**<br>
-
-High churn observed in Standard subscription → Need better engagement strategies
-ARPU(Average Revenue Per User) is highest in Premium segment → Opportunity to upsell to lower tiers
-Late payments correlate with higher churn → Payment reminders & auto-renewal can help
-Support tickets with unresolved issues increase churn → Improve customer service response time
+---
+*This project showcases my ability to perform SQL-based data analysis and create impactful visualizations in Power BI.*
 
