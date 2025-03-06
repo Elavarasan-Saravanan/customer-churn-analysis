@@ -131,7 +131,27 @@ The findings from the SQL analysis are visualized using Power BI, allowing for:
 - Dynamic filtering by customer demographics and subscription types
 - Identification of key churn drivers and risk factors
 
-(Screenshots to be added here)
+**Customer Churn Overview**
+
+**Key Metrics:** Churn Rate, Average Revenue Per User (ARPU)
+
+**Visuals:** Churn Status Pie Chart, Yearly Churn Trends, Subscription Revenue Analysis
+
+**Insights:** Identify churn hotspots & revenue distribution
+
+![image](https://github.com/user-attachments/assets/065e18f1-d17b-4624-810b-6fd174848861)
+
+**Customer Support & Trends**
+
+**Key Metrics:** Total Revenue, Late Payments, Customer Growth
+
+**Visuals:** Monthly Revenue Trends, Late Payment Summary, Support Ticket Status
+
+**Insights:** Correlation between support issues, late payments, and churn
+
+![image](https://github.com/user-attachments/assets/895af8e1-b68f-43bc-8dfd-b8a736917f63)
+
+View Interactive Dashboard: https://app.powerbi.com/view?r=eyJrIjoiOGY2NjA1YjItYjc0NC00OWM2LWFiZDQtYzZlMzRkMzJlMmRjIiwidCI6ImRmODY3OWNkLWE4MGUtNDVkOC05OWFjLWM4M2VkN2ZmOTVhMCJ9
 
 ## Conclusion:
 By analyzing customer churn data, this project provides valuable insights into customer behavior and key factors influencing churn. The findings can be used to implement data-driven retention strategies, improve customer satisfaction, and enhance business profitability.
