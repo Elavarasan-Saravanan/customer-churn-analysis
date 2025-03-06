@@ -136,11 +136,5 @@ The findings from the SQL analysis are visualized using Power BI, allowing for:
 ## Conclusion:
 By analyzing customer churn data, this project provides valuable insights into customer behavior and key factors influencing churn. The findings can be used to implement data-driven retention strategies, improve customer satisfaction, and enhance business profitability.
 
-## Next Steps:
-- Implement machine learning models to predict customer churn
-- Develop personalized retention campaigns based on insights
-- Continuously update the dashboard with real-time data
 
----
-*This project showcases my ability to perform SQL-based data analysis and create impactful visualizations in Power BI.*
 
