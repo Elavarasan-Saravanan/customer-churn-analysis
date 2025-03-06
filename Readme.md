@@ -27,54 +27,103 @@ FROM customers;
 
 **Insight:** The overall churn rate provides an overview of customer retention challenges and helps assess the scale of churn.
 
-### 2. What are the top reasons for customer churn?
+### 2. What are the monthly revenue trends?
 ```sql
-SELECT churn_reason, COUNT(*) AS occurrences
-FROM customers
-WHERE churn_status = 'Yes'
-GROUP BY churn_reason
-ORDER BY occurrences DESC;
-```
-**Insight:** Identifying the top reasons for churn helps businesses target specific issues affecting customer satisfaction.
 
-### 3. How does tenure impact churn?
-```sql
-SELECT tenure_group, COUNT(*) AS churn_count
-FROM (
-    SELECT CASE
-        WHEN tenure <= 6 THEN '0-6 months'
-        WHEN tenure <= 12 THEN '7-12 months'
-        WHEN tenure <= 24 THEN '1-2 years'
-        ELSE '2+ years' END AS tenure_group,
-        churn_status
-    FROM customers
-) AS tenure_data
-WHERE churn_status = 'Yes'
-GROUP BY tenure_group
-ORDER BY churn_count DESC;
-```
-**Insight:** Understanding how long customers stay before churning can help develop targeted retention strategies.
+SELECT
+    DATE_FORMAT(transaction_date, '%Y-%m') AS month,
+    SUM(amount) AS total_revenue
+FROM transactions
+GROUP BY month
+ORDER BY month;
 
-### 4. Which customer segments have the highest churn rates?
+```
+**Result:** ![image](https://github.com/user-attachments/assets/bc304b78-577d-4f94-90b0-c00cf78d3ae9)
+
+#### Insight:
+This query helps track revenue trends over time, identifying peak months and periods of revenue decline. This can assist in understanding seasonal patterns or the impact of business strategies.
+
+---
+### 3. How does churn vary by subscription type?
 ```sql
-SELECT customer_segment,
-       (COUNT(*) / (SELECT COUNT(*) FROM customers WHERE customer_segment = c.customer_segment)) * 100 AS churn_rate
+SELECT
+    s.subscription_type,
+    COUNT(c.customer_id) AS total_customers,
+    SUM(CASE WHEN c.status = 'Churned' THEN 1 ELSE 0 END) AS churned_customers,
+    ROUND(SUM(CASE WHEN c.status = 'Churned' THEN 1 ELSE 0 END) * 100.0 / COUNT(c.customer_id), 2) AS churn_rate
 FROM customers c
-WHERE churn_status = 'Yes'
-GROUP BY customer_segment
-ORDER BY churn_rate DESC;
-```
-**Insight:** Segmentation analysis highlights which groups of customers are more likely to churn.
+JOIN subscriptions s ON c.customer_id = s.customer_id
+GROUP BY s.subscription_type;
 
-### 5. What subscription types are most prone to churn?
-```sql
-SELECT subscription_type, COUNT(*) AS churn_count
-FROM customers
-WHERE churn_status = 'Yes'
-GROUP BY subscription_type
-ORDER BY churn_count DESC;
 ```
-**Insight:** Subscription-based businesses can use this data to improve offerings and enhance customer retention.
+**Result:** ![image](https://github.com/user-attachments/assets/89272e9e-b169-454c-8f19-473c7c85f9bf)
+
+#### Insight:
+Different subscription types may have varying churn rates. Identifying high-churn subscription types can help businesses tailor retention strategies and improve service offerings.
+
+---
+### 4. Which customers are at high risk due to late payments?
+```sql
+SELECT customer_id, COUNT(*) AS late_payments
+FROM transactions
+WHERE transaction_date > DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+GROUP BY customer_id
+HAVING late_payments < 2;
+
+```
+**Result:** ![image](https://github.com/user-attachments/assets/cfa6af55-3e92-4534-a5b8-746cc5a7ef23)
+
+#### Insight:
+Customers with frequent late payments are at higher risk of churn. Identifying these customers allows businesses to implement proactive engagement strategies to retain them.
+
+---
+### 5. Who are the top 10 customers by revenue?
+```sql
+SELECT customer_id, SUM(amount) AS total_spent
+FROM transactions
+GROUP BY customer_id
+ORDER BY total_spent DESC
+LIMIT 10;
+
+```
+**Result:** ![image](https://github.com/user-attachments/assets/228bae03-f62f-497f-9b54-5ec6a2eb4cf6)
+
+#### Insight:
+Understanding the top revenue-generating customers helps businesses focus on retaining their most valuable customers and providing them with personalized services.
+
+---
+### 6. How can we predict churned customers?
+```sql
+SELECT customer_id,
+       MAX(transaction_date) AS last_transaction,
+       CASE
+           WHEN MAX(transaction_date) < DATE_SUB(CURDATE(), INTERVAL 6 MONTH) THEN 'Churned'
+           ELSE 'Active'
+       END AS churn_status
+FROM transactions
+GROUP BY customer_id;
+
+```
+**Result:** ![image](https://github.com/user-attachments/assets/a29a67ee-7555-42ee-8b3f-98a7bfbf2b24)
+
+#### Insight:
+Predicting potential churn based on transaction activity allows businesses to take preventive actions before customers leave.
+
+---
+### 7. What are the key factors contributing to churn?
+```sql
+SELECT c.customer_id, c.status, s.subscription_type, COUNT(st.ticket_id) AS support_tickets
+FROM customers c
+LEFT JOIN subscriptions s ON c.customer_id = s.customer_id
+LEFT JOIN support_tickets st ON c.customer_id = st.customer_id
+WHERE c.status = 'Churned'
+GROUP BY c.customer_id, c.status, s.subscription_type;
+
+```
+**Result:** ![image](https://github.com/user-attachments/assets/c7d946c1-29ad-497a-91c7-038da0d24c93)
+
+#### Insight:
+By analyzing the number of support tickets and subscription types for churned customers, we can identify common issues leading to customer dissatisfaction. A high number of support tickets may indicate unresolved customer complaints or technical difficulties.
 
 ## Power BI Dashboard:
 The findings from the SQL analysis are visualized using Power BI, allowing for:
