@@ -5,7 +5,7 @@
 - Power BI
 
 ## Dataset Used:
-Customer churn dataset from [your data source]
+Customer churn dataset from Kaggle
 
 ## Business Problem:
 Customer churn is a significant challenge for businesses, leading to revenue loss and increased acquisition costs. The objective of this analysis is to understand customer churn patterns, identify key factors contributing to churn, and derive actionable insights that can help businesses retain customers.
